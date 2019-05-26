@@ -1,10 +1,12 @@
 from django.shortcuts import render,redirect
+from rest_framework.exceptions import ValidationError
 from django.http import HttpResponse
 from rest_framework import  viewsets
 from rest_framework.response import Response
 from . import models
 from . import serializers
 import time
+import sys
 # Create your views here.
 
 class ShortUrlViewSet(viewsets.ModelViewSet):
@@ -16,25 +18,26 @@ class ShortUrlViewSet(viewsets.ModelViewSet):
 
         start = time.time()
 
-        if(request.data == '' and request.query_params == ''):
-            return Response()
         try:
             seriaT = serializers.ShortUrlSerializer(data=request.data)
             seriaT.is_valid(raise_exception=True)
-        except:
-            return Response({'mensagem':'INSERT A VALID URL'})
-        objeto = seriaT.save()
+            objeto = seriaT.save()
+        except ValidationError as e:
+           if 'unique' in str(e.detail):
+                return Response({'alias':request.data.get('alias'),'ERR_CODE':'002','description':'CUSTOM ALIAS ALREADY EXIST'})
+           return Response({'mensagem':'INSERT A VALID URL'})
 
         return Response({'alias': objeto.alias ,'url': request.get_host() +'/'+objeto.alias, 'statistics': {'time':str(round((time.time() - start) * 1000)) + 'ms'}})
 
     def retrieve(self, request, pk=None):
         
-        try:
+
+        try:    
             url = models.ShortUrl.objects.get(pk=pk)
-            url.count+=1
-            url.access()
         except:
-            return (Response({'ERR_CODE':'002','description':'SHORTENED URL NOT FOUND'}))
+            return Response({'ERR_CODE':'002','description':'SHORTENED URL NOT FOUND'})
+
+        url.access()
         redirectUrl = url.url
 
         if(redirectUrl != 'http'):

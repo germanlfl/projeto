@@ -34,4 +34,4 @@ class ShortUrl(models.Model):
         super(ShortUrl,self).save(*args, **kwargs)
 
     class Meta:
-        ordering = ["count"]
+        ordering = ['-count']
