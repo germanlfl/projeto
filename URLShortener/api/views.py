@@ -31,7 +31,6 @@ class ShortUrlViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk=None):
         
-
         try:    
             url = models.ShortUrl.objects.get(pk=pk)
         except:
@@ -45,4 +44,5 @@ class ShortUrlViewSet(viewsets.ModelViewSet):
         return redirect(redirectUrl)
     
 def index(request):
+
     return render(request,'api/index.html')
