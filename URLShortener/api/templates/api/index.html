@@ -224,7 +224,7 @@ body {
                    url: url,
                    success: function(data)
                    {
-                       $("#result").slideToggle(800).delay(800);
+                       $("#result").slideToggle(800).delay(1000);
                        $("#result").html('');
                        $.each(data.results, function (index, value) {
                            $("#result").append(json2html.transform(value, transformList));
@@ -238,8 +238,37 @@ body {
                 $("#criar").prop("disabled",true);
                 var form = $("#form");
                 var url = '/create?';
-                var transformErroCreate1 = { "<>": "div",'class':'card', "text": "${mensagem}" };
-                var transformErroCreate2 = { "<>": "div",'class':'card', "text": "${ERR_CODE} - ${alias} - ${DESCRIPTION}" };
+                var mensagemErro1 = {
+                    "<>": "div", "class": "card", "html": [
+                        {
+                            "<>": "ul", "html": [
+                                { "<>": "li", "html": "Mensagem: ${mensagem}" }
+                            ]
+                        }
+                    ]
+                };
+                var mensagemErro2 = {
+                    "<>": "div", "class": "card", "html": [
+                        {
+                            "<>": "ul", "html": [
+                                { "<>": "li", "html": "Codigo: ${ERR_CODE}" },
+                                { "<>": "li", "html": "Alias: ${alias}" },
+                                { "<>": "li", "html": "Descricao: ${DESCRIPTION}" }
+                            ]
+                        }
+                    ]
+                };
+                var mensagemSucesso = {
+                    "<>": "div", "class": "card", "html": [
+                        {
+                            "<>": "ul", "html": [
+                                { "<>": "li", "html": "Alias: ${alias}" },
+                                { "<>": "li", "html": [{ "<>": "a","href":"${url}", "html": "${url}" }] },
+                                { "<>": "li", "html": "Tempo: ${elapsed_time}" }
+                            ]
+                        }
+                    ]
+                };
                 var transformSucesso = { "<>": "div",'class':'card', "text": "${alias} - ${url}" };
                 $.ajax({
                    type: "PUT",
@@ -247,17 +276,16 @@ body {
                    data: form.serialize(),
                    success: function(data)
                    {    
-                       $("#result").slideToggle(800).delay(800);
+                       $("#result").slideToggle(800).delay(1000);
                        $("#result").html('');
-                       console.log(data);
-                       if (data['url'] != '') {
-                            $("#result").append(json2html.transform(data, transformSucesso));
+                       if (data['url'] != undefined) {
+                            $("#result").append(json2html.transform(data, mensagemSucesso));
                        } else {
                             if (data.ERR_CODE == '002') {
-                                $("#result").append(json2html.transform(data, transformErroCreate2));
+                                $("#result").append(json2html.transform(data, mensagemErro2));
                             } else {
-                                if (data['mensagem'] != '') {
-                                    $("#result").append(json2html.transform(data, transformErroCreate1));
+                                if (data['mensagem'] != undefined) {
+                                    $("#result").append(json2html.transform(data, mensagemErro1));
                                 }
                             }
                        }
@@ -293,7 +321,8 @@ body {
         <div id="result"></div>
     </div>
   </form>
+    
 </div>
-
+    <span style="color:white;position:absolute;top:0px;opacity:0.8;"> Fonte do formulario : https://codepen.io/danielart/pen/zdXjLg</span>
 </body>
 </html>

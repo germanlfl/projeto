@@ -27,7 +27,7 @@ class ShortUrlViewSet(viewsets.ModelViewSet):
                 return Response({'alias':request.data.get('alias'),'ERR_CODE':'002','DESCRIPTION':'CUSTOM ALIAS ALREADY EXIST'})
            return Response({'mensagem':'INSERT A VALID URL'})
 
-        return Response({'alias': objeto.alias ,'url': request.get_host() +'/'+objeto.alias, 'statistics': {'time':str(round((time.time() - start) * 1000)) + 'ms'}})
+        return Response({'alias': objeto.alias ,'url': 'http://' + request.get_host() +'/'+objeto.alias,'elapsed_time':str(round((time.time() - start) * 1000)) + 'ms'})
 
     def retrieve(self, request, pk=None):
         
