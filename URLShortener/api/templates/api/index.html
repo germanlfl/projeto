@@ -1,69 +1,299 @@
+<!DOCTYPE html>
 <html>
-<head><title></title></head>
-<style>
+<head>
+    <title></title><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.2.0/json2html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.json2html/1.2.0/jquery.json2html.min.js"></script>
+    <style>
+body {
+  background: rgba(20, 200, 200, 1);
+}
 
+.container {
+  width: 650px;
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  padding: 60px;
+  top: 20px;
+  left: calc(50% - 325px);
+  box-shadow: -10px 10px 40px 0px rgba(0, 0, 0, 0.3);
+  background-color: rgba(105, 60, 150, 1);
+  border-radius: 20px;
+}
 
-    button {
-      font-size: 14px;
-      padding: 8px 20px;
-      margin-right: 12px;
-      border-radius: 4px;
-      border: 2px solid;
-      text-decoration: none;
-      font-weight: 500;
-      position: relative;
-      background: transparent;
-      text-transform: uppercase;
-      transition: all 400ms ease;
-      cursor: pointer;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.26);
-      margin: 8px;
-    }
-    .five {
-      overflow: hidden;
-    }
+.form label, .form input, .form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  outline-style: none;
+  outline-color: transparent;
+  background-color: transparent;
+  fill: transparent;
+  border: none;
+  margin: 0;
+}
 
-.five::after {
-      height: 100%;
-      left: -36%;
-      top: 0;
-      width: 0;
-      -webkit-transform: skew(50deg);
-              transform: skew(50deg);
-      -webkit-transform-origin: top left;
-              transform-origin: top left;
-    }
+@-webkit-keyframes autofill {
+  to {
+    color: rgba(255, 255, 255, 1);
+    font-weight: 300;
+    background: transparent;
+  }
+}
 
-    .five:hover::after {
-      height: 100%;
-      width: 136%;
-    }
-    
-    .six {
-      overflow: hidden;
-    }
+.form input:-webkit-autofill,
+.form textarea:-webkit-autofill {
+  -webkit-animation-name: autofill;
+  -webkit-animation-fill-mode: both;
+}
 
-    .six::after {
-      height: 100%;
-      right: 0;
-      top: 0;
-      width: 0;
-      -webkit-transform: skew(50deg);
-              transform: skew(50deg);
-      -webkit-transform-origin: top right;
-              transform-origin: top right;
-    }
+.form input::-webkit-input-placeholder,
+.form textarea::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 1);
+  font-weight: 400;
+}
+.form input:-moz-placeholder,
+.form textarea:-moz-placeholder {
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+  font-weight: 400;
+}
+.form input::-moz-placeholder,
+.form textarea::-moz-placeholder {
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+  font-weight: 400;
+}
+.form input:-ms-input-placeholder,
+.form textarea:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 1);
+  font-weight: 400;
+}
+.form input::-ms-input-placeholder,
+.form textarea::-ms-input-placeholder {
+  color: rgba(255, 255, 255, 1);
+  font-weight: 400;
+}
 
-    .six:hover::after {
-      height: 100%;
-      width: 140%;
-    }
+.form input {
+  height: 50px;
+}
+
+.form textarea {
+  min-height: 50px;
+  max-height: 300px;
+  height: auto;
+  display: inline-block;
+  resize: none;
+  padding: 10px 0;
+}
+
+.form input[type="button"] {
+  width: auto;
+  padding: 0 40px;
+  margin: 40px 0 0 0;
+  font-weight: 400;
+  box-shadow: inset 0 0 0 2px rgba(255 ,255 ,255 , 1);
+  cursor: pointer;
+  border-radius: 30px;
+}
+
+.form input[type="button"]:hover {
+  background-color: rgba(255, 255, 255, 1);
+  color: rgba(105, 60, 150, 1);
+  transition: all 0.2s ease-in-out;
+}
+
+.form input[type="button"]:focus {
+  box-shadow: inset 0 0 0 2px rgba(255 ,255 ,255 , 1), 0 0 10px 0 rgba(255 ,255 ,255 , 0.4);
+}
+
+.form label {
+  display: block;
+  position: absolute;
+  top: 30px;
+  font-size: 20px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  z-index: -1;
+}
+
+.form input,
+.form textarea {
+  margin: 20px 0 0 0;
+  font-size: 20px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 1);
+  box-shadow: inset 0 -2px 0 0 rgba(230 ,190 ,50 , 1);
+}
+
+.field {
+  position: relative;
+}
+
+.field input[type="text"]:focus ~ label,
+.field input[type="email"]:focus ~ label,
+.field textarea:focus ~ label,
+.field input[type="text"]:valid ~ label,
+.field input[type="email"]:valid ~ label,
+.field textarea:valid ~ label,
+.field input:not([value=""]) ~ label,
+.field textarea:not([value=""]) ~ label {
+  top: 10px;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 1);
+  z-index: 1;
+  transition: all 0.2s ease-in-out, color 0s;
+}
+
+.field input[type="text"]:focus ~ label,
+.field input[type="email"]:focus ~ label,
+.field textarea:focus ~ label {
+  color: rgba(255, 255, 255, 1);
+}
+
+.field input[type="text"]:valid ~ label,
+.field input[type="email"]:valid ~ label,
+.field textarea:valid ~ label {
+  color: rgba(20, 200, 200, 1);
+}
+
+.field input[type="text"]:not(:focus):invalid ~ label,
+.field input[type="email"]:not(:focus):invalid ~ label,
+.field textarea:not(:focus):invalid ~ label {
+  color: rgba(230 ,190 ,50 , 1);
+  transition: all 0.2s ease-in-out;
+}
+
+.field input:focus,
+.field textarea:focus {
+  box-shadow: inset 0 -2px 0 0 rgba(255 ,255 ,255 , 1);
+  transition: all 0.2s ease-in-out;
+}
+
+.field input:valid,
+.field textarea:valid {
+  box-shadow: inset 0 -2px 0 0 rgba(20, 200, 200, 1);
+  transition: all 0.2s ease-in-out;
+}
+
+.field input[value=""]:not(:focus):invalid,
+.field textarea[value=""]:not(:focus):invalid {
+  box-shadow: inset 0 -2px 0 0 rgba(255 ,255 ,255 , 0.6);
+  transition: all 0.2s ease-in-out;
+}
+#resultado {
+    padding: 5px;
+    margin-top: 20px;
+}
+.card{
+    background-color: white;
+    padding: 5px;
+    margin-top: 40px;
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
+    border-radius: 10px;
+}
+.input:disabled {
+    opacity:0.5;
+}
 
 </style>
-<body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var transformList = {
+                "<>": "div", "class": "card", "html": [
+                    {
+                        "<>": "ul", "html": [
+                            { "<>": "li", "text": "Alias: ${alias}" },
+                            { "<>": "li", "html": "Domain: ${domain}" },
+                            { "<>": "li", "html": "Url: ${url}" },
+                            { "<>": "li", "html": "Counter: ${count}" },
+                            { "<>": "li", "html": "Created: ${created}" }
+                        ]
+                    }
+                ]
+            };
+        
+            $("#list").click(function () {
+                $("#list").prop("disabled",true);
+                var url = '/list';
+                $.ajax({
+                   type: "GET",
+                   url: url,
+                   success: function(data)
+                   {
+                       $("#result").slideToggle(800).delay(800);
+                       $("#result").html('');
+                       $.each(data.results, function (index, value) {
+                           $("#result").append(json2html.transform(value, transformList));
+                       });
+                       $("#result").slideToggle(800);
+                   }
+                });
+                $("#list").prop("disabled",false);
+            });
+            $("#criar").click(function () {
+                $("#criar").prop("disabled",true);
+                var form = $("#form");
+                var url = '/create?';
+                var transformErroCreate1 = { "<>": "div",'class':'card', "text": "${mensagem}" };
+                var transformErroCreate2 = { "<>": "div",'class':'card', "text": "${ERR_CODE} - ${alias} - ${DESCRIPTION}" };
+                var transformSucesso = { "<>": "div",'class':'card', "text": "${alias} - ${url}" };
+                $.ajax({
+                   type: "PUT",
+                   url: url,
+                   data: form.serialize(),
+                   success: function(data)
+                   {    
+                       $("#result").slideToggle(800).delay(800);
+                       $("#result").html('');
+                       console.log(data);
+                       if (data['url'] != '') {
+                            $("#result").append(json2html.transform(data, transformSucesso));
+                       } else {
+                            if (data.ERR_CODE == '002') {
+                                $("#result").append(json2html.transform(data, transformErroCreate2));
+                            } else {
+                                if (data['mensagem'] != '') {
+                                    $("#result").append(json2html.transform(data, transformErroCreate1));
+                                }
+                            }
+                       }
 
-    <button href="/create" class="five">Criar</button>
-    <button href="/create" class="six">Criar</button>
+                       $("#result").slideToggle(800);
+                   }
+                });
+                $("#criar").prop("disabled",false);
+            });
+
+        });
+    </script>
+</head>
+
+<body>
+<div class="container">
+  <form id="form" class="form">
+
+    <div class="field">
+      <input type="text" name="alias" placeholder="Alias(Opcional)" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Name'" onkeyup="this.setAttribute('value', this.value);" value="" />
+      <label for="Name">Alias</label>
+    </div>
+
+    <div class="field">
+      <input type="text"  name="url" placeholder="Url" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'" onkeyup="this.setAttribute('value', this.value);" value="" autocomplete="on" />
+      <label for="Email">Url</label>
+    </div>
+
+    <input type="button" value="Create" id="criar">
+    <input type="button" value="List" id="list" >
+
+    <div class="field">
+        <div id="result"></div>
+    </div>
+  </form>
+</div>
 
 </body>
 </html>

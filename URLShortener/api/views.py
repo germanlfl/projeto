@@ -24,7 +24,7 @@ class ShortUrlViewSet(viewsets.ModelViewSet):
             objeto = seriaT.save()
         except ValidationError as e:
            if 'unique' in str(e.detail):
-                return Response({'alias':request.data.get('alias'),'ERR_CODE':'002','description':'CUSTOM ALIAS ALREADY EXIST'})
+                return Response({'alias':request.data.get('alias'),'ERR_CODE':'002','DESCRIPTION':'CUSTOM ALIAS ALREADY EXIST'})
            return Response({'mensagem':'INSERT A VALID URL'})
 
         return Response({'alias': objeto.alias ,'url': request.get_host() +'/'+objeto.alias, 'statistics': {'time':str(round((time.time() - start) * 1000)) + 'ms'}})
@@ -45,4 +45,4 @@ class ShortUrlViewSet(viewsets.ModelViewSet):
         return redirect(redirectUrl)
     
 def index(request):
-    return HttpResponse('')
+    return render(request,'api/index.html')
