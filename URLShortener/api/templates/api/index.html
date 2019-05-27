@@ -224,10 +224,11 @@ body {
                    url: url,
                    success: function(data)
                    {
-                       $("#result").slideToggle(800).delay(1000);
-                       $("#result").html('');
-                       $.each(data.results, function (index, value) {
-                           $("#result").append(json2html.transform(value, transformList));
+                       $("#result").slideToggle(800, function () {
+                            $("#result").html('');
+                            $.each(data.results, function (index, value) {
+                                $("#result").append(json2html.transform(value, transformList));
+                            });
                        });
                        $("#result").slideToggle(800);
                    }
@@ -276,20 +277,20 @@ body {
                    data: form.serialize(),
                    success: function(data)
                    {    
-                       $("#result").slideToggle(800).delay(1000);
-                       $("#result").html('');
-                       if (data['url'] != undefined) {
-                            $("#result").append(json2html.transform(data, mensagemSucesso));
-                       } else {
-                            if (data.ERR_CODE == '002') {
-                                $("#result").append(json2html.transform(data, mensagemErro2));
-                            } else {
-                                if (data['mensagem'] != undefined) {
-                                    $("#result").append(json2html.transform(data, mensagemErro1));
+                       $("#result").slideToggle(800, function () {
+                           $("#result").html('');
+                           if (data['url'] != undefined) {
+                                $("#result").append(json2html.transform(data, mensagemSucesso));
+                           } else {
+                                if (data.ERR_CODE == '002') {
+                                    $("#result").append(json2html.transform(data, mensagemErro2));
+                                } else {
+                                    if (data['mensagem'] != undefined) {
+                                        $("#result").append(json2html.transform(data, mensagemErro1));
+                                    }
                                 }
-                            }
-                       }
-
+                           }
+                       })
                        $("#result").slideToggle(800);
                    }
                 });
